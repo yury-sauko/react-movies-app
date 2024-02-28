@@ -1,0 +1,55 @@
+.movie-card {
+    display: flex;
+    width: 451px;
+    height: 279px;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.movie-poster {
+    width: 40%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.movie-descr {
+    width: 60%;
+    padding: 10px 20px;
+}
+
+.movie-title {
+    margin: 0 0 7px 0;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.movie-release-date {
+    margin: 0 0 7px 0;
+    font-size: 12px;
+    line-height: 1.83;
+    color: #827e7e;
+}
+
+.movie-genre {
+    margin: 0 0 7px 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.65);
+    text-align: center;
+}
+
+.btn-view {
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    width: 46px;
+    height: 20px;
+    margin-right: 8px;
+    background: #fafafa;
+}
+
+.movie-overview {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.83;
+}
