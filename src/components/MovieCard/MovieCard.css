@@ -5,8 +5,16 @@
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
 }
 
-.movie-poster {
+.movie-poster-container {
   width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }
