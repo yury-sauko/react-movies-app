@@ -1,45 +1,31 @@
-import { Component } from 'react';
 import { Spin } from 'antd';
-import FetchMoviesDataArr from '../FetchMoviesDataArr/FetchMoviesDataArr';
+import PropTypes from 'prop-types';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import MovieCard from '../MovieCard/MovieCard';
 import './MoviesList.css';
 
-export default class MoviesList extends Component {
-  constructor() {
-    super();
-    this.getMoviesData();
-  }
+export default function MoviesList({ isDataLoading, isError, moviesDataArr }) {
+  const moviesDataMapping = moviesDataArr.map((movieData) => (
+    <MovieCard
+      key={movieData.id}
+      imgSrc={movieData.poster_path}
+      movieTitle={movieData.original_title}
+      movieReleaseDate={movieData.release_date}
+      movieOverview={movieData.overview}
+    />
+  ));
 
-  state = {
-    isDataLoading: true,
-    isError: false,
-    moviesDataArr: [],
-  };
+  const moviesOrError = isError ? <ErrorMessage /> : moviesDataMapping;
 
-  onFetchError = () => this.setState({ isDataLoading: false, isError: true });
-
-  getMoviesData = () => {
-    FetchMoviesDataArr()
-      .then((data) => this.setState({ isDataLoading: false, moviesDataArr: data }))
-      .catch(this.onFetchError);
-  };
-
-  render() {
-    const { isDataLoading, isError, moviesDataArr } = this.state;
-
-    const moviesDataMapping = moviesDataArr.map((movieData) => (
-      <MovieCard
-        key={movieData.id}
-        imgSrc={movieData.poster_path}
-        movieTitle={movieData.original_title}
-        movieReleaseDate={movieData.release_date}
-        movieOverview={movieData.overview}
-      />
-    ));
-
-    const dataOrError = isError ? <ErrorMessage /> : moviesDataMapping;
-
-    return <ul className="movies-list">{isDataLoading ? <Spin size="large" /> : dataOrError}</ul>;
-  }
+  return (
+    <ul className="movies-list" style={{ padding: moviesDataArr.length === 0 ? '0' : '35px 0' }}>
+      {isDataLoading ? <Spin size="large" /> : moviesOrError}
+    </ul>
+  );
 }
+
+MoviesList.propTypes = {
+  isDataLoading: PropTypes.bool.isRequired,
+  isError: PropTypes.bool.isRequired,
+  moviesDataArr: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

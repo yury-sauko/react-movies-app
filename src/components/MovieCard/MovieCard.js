@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import { format } from 'date-fns';
 import './MovieCard.css';
+import noPosterImg from './no-poster-img.jpg';
 
 function trimMovieDescr(header, text) {
   if (text.length === 0) return 'There should be an overview here ...';
@@ -69,11 +70,7 @@ export default class MovieCard extends Component {
     isImgLoading: true,
   };
 
-  onLoadImg = () => {
-    this.setState({ isImgLoading: false });
-  };
-
-  onErrLoadImg = () => {
+  handleImgLoading = () => {
     this.setState({ isImgLoading: false });
   };
 
@@ -82,7 +79,6 @@ export default class MovieCard extends Component {
     const { isImgLoading } = this.state;
 
     const _imgSrcBase = 'https://image.tmdb.org/t/p/w185/';
-    const _noPosterUrl = 'https://www.jakartaplayers.org/uploads/1/2/5/5/12551960/2297419_orig.jpg';
 
     const releaseDate =
       movieReleaseDate.length > 0 ? format(movieReleaseDate, 'PP') : 'Release date unknown';
@@ -91,11 +87,11 @@ export default class MovieCard extends Component {
       <li className="movie-card">
         <div className="movie-poster-container">
           <img
-            src={imgSrc ? `${_imgSrcBase}${imgSrc}` : _noPosterUrl}
+            src={imgSrc ? `${_imgSrcBase}${imgSrc}` : noPosterImg}
             alt="We are sorry, but there was an error when uploading the poster"
             className="movie-poster"
-            onLoad={this.onLoadImg}
-            onError={this.onErrLoadImg}
+            onLoad={this.handleImgLoading}
+            onError={this.handleImgLoading}
             style={{ display: isImgLoading ? 'none' : 'block' }}
           />
           {isImgLoading ? <Spin /> : null}

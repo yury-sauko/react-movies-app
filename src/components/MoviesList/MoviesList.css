@@ -1,8 +1,6 @@
 .movies-list {
   margin: 0;
-  padding: 35px 0;
   list-style-type: none;
-  background-color: #fff;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

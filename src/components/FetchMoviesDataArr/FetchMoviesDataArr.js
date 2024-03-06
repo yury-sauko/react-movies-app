@@ -1,8 +1,7 @@
-export default async function FetchMoviesDataArr() {
-  const _baseUrl = 'https://api.themoviedb.org/3/search/';
-  const targetUrl = 'movie';
-  const queryString = '?query=return&include_adult=false&language=en-US&page=3';
-  const url = _baseUrl + targetUrl + queryString;
+export default async function FetchMoviesDataArr(queryText) {
+  const baseUrl = 'https://api.themoviedb.org/3/search/movie?query=';
+  const queryParams = '&include_adult=false&language=en-US&page=1';
+  const url = baseUrl + queryText + queryParams;
 
   const fetchOptions = {
     method: 'GET',
@@ -20,7 +19,7 @@ export default async function FetchMoviesDataArr() {
   }
 
   const data = await response.json();
-  const moviesDataArr = data.results;
+  const result = { dataArr: data.results, totalMovies: !queryText ? null : data.total_results };
 
-  return moviesDataArr;
+  return result;
 }
