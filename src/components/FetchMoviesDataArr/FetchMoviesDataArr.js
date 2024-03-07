@@ -1,6 +1,6 @@
-export default async function FetchMoviesDataArr(queryText) {
+export default async function FetchMoviesDataArr(queryText, page) {
   const baseUrl = 'https://api.themoviedb.org/3/search/movie?query=';
-  const queryParams = '&include_adult=false&language=en-US&page=1';
+  const queryParams = `&include_adult=false&language=en-US&page=${page}`;
   const url = baseUrl + queryText + queryParams;
 
   const fetchOptions = {
