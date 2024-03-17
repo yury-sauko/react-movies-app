@@ -4,7 +4,7 @@ import './SearchString.css';
 export default function SearchString({ queryText, onLabelChange }) {
   return (
     <input
-      className="searchString"
+      className="search-string"
       type="search"
       placeholder="Type to search..."
       name="searchInput"

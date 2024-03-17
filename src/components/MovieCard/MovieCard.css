@@ -20,14 +20,31 @@
 }
 
 .movie-descr {
+  position: relative;
   width: 60%;
   padding: 10px 20px;
 }
 
 .movie-title {
   margin: 0 0 7px 0;
-  font-size: 20px;
+  padding-right: 24px;
+  font-size: 17px;
   line-height: 1.4;
+}
+
+.movie-rate-current {
+  position: absolute;
+  top: 8px;
+  right: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+  font-size: 12px;
 }
 
 .movie-release-date {
@@ -60,4 +77,14 @@
   margin: 0;
   font-size: 12px;
   line-height: 1.83;
+}
+
+.movie-rate-stars {
+  position: absolute;
+  bottom: 10px;
+}
+
+.movie-descr > .movie-rate-stars .ant-rate-star {
+  margin-inline-end: 7px;
+  font-size: 17px;
 }

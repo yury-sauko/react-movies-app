@@ -1,7 +1,8 @@
 import { Component } from 'react';
+import { Tabs, FloatButton } from 'antd';
 import { Offline, Online } from 'react-detect-offline';
 import { debounce } from 'lodash';
-import FetchMoviesDataArr from '../FetchMoviesDataArr/FetchMoviesDataArr';
+import TMDBService from '../TMDBService/TMDBService';
 import SearchString from '../SearchString/SearchString';
 import MoviesList from '../MoviesList/MoviesList';
 import MoviesPagination from '../MoviesPagination/MoviesPagination';
@@ -12,36 +13,54 @@ import './MoviesApp.css';
 export default class MoviesApp extends Component {
   state = {
     queryText: '',
-    page: 1,
-    isDataLoading: true,
+    activeTab: '1',
+    hasRatedMovie: false,
+    queryPage: 1,
+    ratedPage: 1,
+    isDataLoading: false, // а где ставится в тру?)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     isError: false,
-    moviesDataArr: [],
-    totalMovies: null,
+    queryMoviesDataArr: [],
+    queryTotalMovies: null,
+    ratedMoviesDataArr: [],
+    ratedTotalMovies: 0,
+    moviesIdRateObj: {},
+    guestSessionId: null,
   };
 
+  TMDBService = new TMDBService();
+
   componentDidMount() {
-    this.getMoviesData();
+    this.createGuestSession();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.queryText !== prevState.queryText || this.state.page !== prevState.page) {
+    const { queryText, queryPage, ratedPage, activeTab, hasRatedMovie } = this.state;
+
+    if (queryText !== prevState.queryText || queryPage !== prevState.queryPage) {
       this.getMoviesData();
+    }
+
+    if (
+      (activeTab !== prevState.activeTab && activeTab === '2' && hasRatedMovie) ||
+      (queryPage !== prevState.queryPage && hasRatedMovie) ||
+      ratedPage !== prevState.ratedPage
+    ) {
+      this.getRatedMovies();
     }
   }
 
   onFetchError = () => this.setState({ isDataLoading: false, isError: true });
 
-  getMoviesData = debounce(() => {
-    FetchMoviesDataArr(this.state.queryText, this.state.page)
-      .then((data) =>
+  // eslint-disable-next-line react/sort-comp
+  createGuestSession = () => {
+    this.TMDBService.createGuestSession()
+      .then((guestSessionId) =>
         this.setState({
-          isDataLoading: false,
-          moviesDataArr: data.dataArr,
-          totalMovies: data.totalMovies,
+          guestSessionId,
         }),
       )
       .catch(this.onFetchError);
-  }, 750);
+  };
 
   onLabelChange = (e) => {
     this.setState({
@@ -50,25 +69,134 @@ export default class MoviesApp extends Component {
   };
 
   onPageChange = (page) => {
-    this.setState({
-      page,
-    });
+    if (this.state.activeTab === '1') {
+      this.setState({
+        queryPage: page,
+      });
+    } else {
+      this.setState({
+        ratedPage: page,
+      });
+    }
+  };
+
+  getMoviesData = debounce(() => {
+    this.TMDBService.getMoviesDataArr(this.state.queryText, this.state.queryPage)
+      .then((data) =>
+        this.setState({
+          isDataLoading: false,
+          queryMoviesDataArr: data.dataArr,
+          queryTotalMovies: data.totalMovies,
+        }),
+      )
+      .catch(this.onFetchError);
+  }, 750);
+
+  addRating = (ratingValue, movieId) => {
+    if (!this.state.hasRatedMovie) {
+      this.setState({
+        hasRatedMovie: true,
+      });
+    }
+
+    this.TMDBService.addRating(movieId, this.state.guestSessionId, ratingValue)
+      .then((res) => {
+        if (res) {
+          this.setState(({ moviesIdRateObj }) => {
+            const newObj = { ...moviesIdRateObj };
+            newObj[movieId] = ratingValue;
+
+            return { moviesIdRateObj: newObj };
+          });
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Ошибка, рейтинг не добавлен!');
+        }
+      })
+      .catch(this.onFetchError);
+  };
+
+  getRatedMovies = () => {
+    const { guestSessionId, ratedPage } = this.state;
+
+    this.TMDBService.getRatedMovies(guestSessionId, ratedPage)
+      .then((data) =>
+        this.setState({
+          isDataLoading: false,
+          ratedMoviesDataArr: data.dataArr,
+          ratedTotalMovies: data.totalMovies,
+        }),
+      )
+      .catch(this.onFetchError);
   };
 
   render() {
-    const { queryText, isDataLoading, isError, moviesDataArr, totalMovies } = this.state;
+    const {
+      queryText,
+      activeTab,
+      isDataLoading,
+      isError,
+      queryMoviesDataArr,
+      queryTotalMovies,
+      ratedMoviesDataArr,
+      ratedTotalMovies,
+      moviesIdRateObj,
+    } = this.state;
+
+    const pagTotalMovies = activeTab === '1' ? queryTotalMovies : ratedTotalMovies;
+
+    const tabsItems = [
+      {
+        key: '1',
+        label: 'Search',
+        children: (
+          <>
+            <SearchString queryText={queryText} onLabelChange={this.onLabelChange} />
+            <MoviesList
+              activeTab={activeTab}
+              isDataLoading={isDataLoading}
+              isError={isError}
+              moviesDataArr={queryMoviesDataArr}
+              moviesIdRateObj={moviesIdRateObj}
+              addRating={this.addRating}
+            />
+            {queryTotalMovies === 0 && queryText ? (
+              <NoResultsMessage activeTab={activeTab} />
+            ) : null}
+            <MoviesPagination totalMovies={pagTotalMovies} onPageChange={this.onPageChange} />
+            <FloatButton.BackTop visibilityHeight={400} shape="square" />
+          </>
+        ),
+      },
+      {
+        key: '2',
+        label: 'Rated',
+        children: (
+          <>
+            <MoviesList
+              activeTab={activeTab}
+              isDataLoading={isDataLoading}
+              isError={isError}
+              moviesDataArr={ratedMoviesDataArr}
+              addRating={this.addRating}
+            />
+            {ratedTotalMovies === 0 ? <NoResultsMessage activeTab={activeTab} /> : null}
+            <MoviesPagination totalMovies={pagTotalMovies} onPageChange={this.onPageChange} />
+            <FloatButton.BackTop visibilityHeight={400} shape="square" />
+          </>
+        ),
+      },
+    ];
 
     return (
-      <section className="moviesApp">
+      <section className="movies-app">
         <Online>
-          <SearchString queryText={queryText} onLabelChange={this.onLabelChange} />
-          <MoviesList
-            isDataLoading={isDataLoading}
-            isError={isError}
-            moviesDataArr={moviesDataArr}
+          <Tabs
+            items={tabsItems}
+            defaultActiveKey="1"
+            centered
+            onChange={(activeKey) => this.setState({ activeTab: activeKey })}
           />
-          {totalMovies === 0 && queryText ? <NoResultsMessage /> : null}
-          <MoviesPagination totalMovies={totalMovies} onPageChange={this.onPageChange} />
         </Online>
         <Offline>
           <OfflineMessage />

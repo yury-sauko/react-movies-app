@@ -5,7 +5,9 @@ export default function OfflineMessage() {
     <Space
       direction="vertical"
       style={{
-        paddingTop: '30px',
+        paddingTop: '15px',
+        paddingBottom: '15px',
+        paddingLeft: '25%',
         width: '50%',
       }}
     >

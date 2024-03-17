@@ -1,17 +1,18 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
+import { Spin, Rate } from 'antd';
+// import { StarFilled } from '@ant-design/icons';
 import { format } from 'date-fns';
 import './MovieCard.css';
 import noPosterImg from './no-poster-img.jpg';
 
 function trimMovieDescr(header, text) {
-  if (text.length === 0) return 'There should be an overview here ...';
+  if (text.length === 0) return 'Sorry, there is no overview for this movie.';
 
   const maxTextLength = {
-    h1str: 220,
-    h2str: 175,
-    h3str: 130,
+    h1str: 190,
+    h2str: 145,
+    h3str: 100,
     h4plus: 70,
   };
 
@@ -57,28 +58,62 @@ export default class MovieCard extends Component {
     movieTitle: 'Movie title unknown',
     movieReleaseDate: '',
     movieOverview: "This movie hasn't overview",
+    movieRating: 0,
   };
 
   static propTypes = {
+    activeTab: PropTypes.string.isRequired,
+    movieId: PropTypes.number.isRequired,
     imgSrc: PropTypes.string,
     movieTitle: PropTypes.string,
     movieReleaseDate: PropTypes.string,
     movieOverview: PropTypes.string,
+    movieRating: PropTypes.number,
+    moviesIdRateObj: PropTypes.objectOf(PropTypes.number).isRequired,
+    addRating: PropTypes.func.isRequired,
   };
 
   state = {
     isImgLoading: true,
+    rateValue: 0,
   };
 
   handleImgLoading = () => {
     this.setState({ isImgLoading: false });
   };
 
+  handleRateValue = (value) => {
+    this.setState({ rateValue: value });
+    this.props.addRating(value, this.props.movieId);
+  };
+
   render() {
-    const { imgSrc, movieTitle, movieReleaseDate, movieOverview } = this.props;
-    const { isImgLoading } = this.state;
+    const {
+      activeTab,
+      imgSrc,
+      movieId,
+      movieTitle,
+      movieReleaseDate,
+      movieOverview,
+      movieRating,
+      moviesIdRateObj,
+    } = this.props;
+
+    const { isImgLoading, rateValue } = this.state;
 
     const _imgSrcBase = 'https://image.tmdb.org/t/p/w185/';
+
+    let colorMovieRateCurrent;
+    const rate = activeTab === '1' ? rateValue : movieRating;
+    if (rate <= 3) colorMovieRateCurrent = '#E90000';
+    else if (rate > 3 && rate <= 5) colorMovieRateCurrent = '#E97E00';
+    else if (rate > 5 && rate <= 7) colorMovieRateCurrent = '#E9D100';
+    else colorMovieRateCurrent = '#66E900';
+
+    const isMovieHasRating = Object.prototype.hasOwnProperty.call(moviesIdRateObj, movieId);
+    const rateValueTab1 =
+      rateValue === 0 && isMovieHasRating ? moviesIdRateObj[movieId] : rateValue;
+    const rateCurTab1 = rateValueTab1 === 0 ? 'Rate!' : rateValueTab1;
 
     const releaseDate =
       movieReleaseDate.length > 0 ? format(movieReleaseDate, 'PP') : 'Release date unknown';
@@ -98,10 +133,23 @@ export default class MovieCard extends Component {
         </div>
         <div className="movie-descr">
           <h3 className="movie-title">{movieTitle}</h3>
+          <div className="movie-rate-current" style={{ borderColor: `${colorMovieRateCurrent}` }}>
+            {activeTab === '1' ? rateCurTab1 : movieRating}
+          </div>
           <p className="movie-release-date">{releaseDate}</p>
           <span className="movie-genre btn-view">Action</span>
           <span className="movie-genre btn-view">Drama</span>
           <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
+          <Rate
+            className="movie-rate-stars"
+            // character={<StarFilled style={{ width: '17px' }} />}
+            allowHalf
+            allowClear={false}
+            count={10}
+            value={activeTab === '1' ? rateValueTab1 : movieRating}
+            disabled={activeTab === '2'}
+            onChange={(value) => this.handleRateValue(value)}
+          />
         </div>
       </li>
     );

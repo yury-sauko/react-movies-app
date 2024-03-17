@@ -1,6 +1,6 @@
-.searchString {
+.search-string {
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 15px;
   padding: 0 12px;
   width: 93%;
   height: 40px;

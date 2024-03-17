@@ -5,12 +5,14 @@ export default function ErrorMessage() {
     <Space
       direction="vertical"
       style={{
-        width: '70%',
+        paddingTop: '15px',
+        paddingBottom: '15px',
+        width: '50%',
       }}
     >
       <Alert
         message="Error"
-        description="Something went wrong, try to change the query or come back later"
+        description="Something went wrong, please try restarting the app"
         type="error"
         showIcon
       />
