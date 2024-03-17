@@ -54,12 +54,20 @@
   color: #827e7e;
 }
 
-.movie-genre {
+.movie-genres-list {
+  display: flex;
   margin: 0 0 7px 0;
+  padding: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.movie-genre {
   font-size: 12px;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.65);
   text-align: center;
+  white-space: nowrap;
 }
 
 .btn-view {
@@ -67,16 +75,16 @@
   box-sizing: border-box;
   border: 1px solid #d9d9d9;
   border-radius: 2px;
-  width: 46px;
   height: 20px;
-  margin-right: 8px;
+  margin: 0 8px 4px 0;
+  padding: 0 3px;
   background: #fafafa;
 }
 
 .movie-overview {
   margin: 0;
   font-size: 12px;
-  line-height: 1.83;
+  line-height: 1.65;
 }
 
 .movie-rate-stars {

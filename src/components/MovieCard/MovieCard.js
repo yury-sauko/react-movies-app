@@ -63,6 +63,8 @@ export default class MovieCard extends Component {
 
   static propTypes = {
     activeTab: PropTypes.string.isRequired,
+    moviesGenresArr: PropTypes.arrayOf(PropTypes.object).isRequired,
+    genreIdsArr: PropTypes.arrayOf(PropTypes.number).isRequired,
     movieId: PropTypes.number.isRequired,
     imgSrc: PropTypes.string,
     movieTitle: PropTypes.string,
@@ -90,6 +92,8 @@ export default class MovieCard extends Component {
   render() {
     const {
       activeTab,
+      moviesGenresArr,
+      genreIdsArr,
       imgSrc,
       movieId,
       movieTitle,
@@ -118,6 +122,20 @@ export default class MovieCard extends Component {
     const releaseDate =
       movieReleaseDate.length > 0 ? format(movieReleaseDate, 'PP') : 'Release date unknown';
 
+    const genresNamesArr = moviesGenresArr
+      .filter((genresObj) => genreIdsArr.includes(genresObj.id))
+      .map((genresObj) => genresObj.name);
+
+    let genreKey = 0;
+    const genresIconsArr = genresNamesArr.map((genre) => {
+      genreKey += 1;
+      return (
+        <span key={genreKey} className="movie-genre btn-view">
+          {genre}
+        </span>
+      );
+    });
+
     return (
       <li className="movie-card">
         <div className="movie-poster-container">
@@ -137,8 +155,7 @@ export default class MovieCard extends Component {
             {activeTab === '1' ? rateCurTab1 : movieRating}
           </div>
           <p className="movie-release-date">{releaseDate}</p>
-          <span className="movie-genre btn-view">Action</span>
-          <span className="movie-genre btn-view">Drama</span>
+          <ul className="movie-genres-list">{genresIconsArr}</ul>
           <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
           <Rate
             className="movie-rate-stars"

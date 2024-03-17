@@ -8,6 +8,7 @@ export default function MoviesList({
   isDataLoading,
   isError,
   activeTab,
+  moviesGenresArr,
   moviesDataArr,
   moviesIdRateObj,
   addRating,
@@ -16,6 +17,8 @@ export default function MoviesList({
     <MovieCard
       key={movieData.id}
       activeTab={activeTab}
+      moviesGenresArr={moviesGenresArr}
+      genreIdsArr={movieData.genre_ids}
       movieId={movieData.id}
       imgSrc={movieData.poster_path}
       movieTitle={movieData.original_title}
@@ -47,6 +50,7 @@ MoviesList.propTypes = {
   activeTab: PropTypes.string.isRequired,
   isDataLoading: PropTypes.bool.isRequired,
   isError: PropTypes.bool.isRequired,
+  moviesGenresArr: PropTypes.arrayOf(PropTypes.object).isRequired,
   moviesDataArr: PropTypes.arrayOf(PropTypes.object).isRequired,
   moviesIdRateObj: PropTypes.objectOf(PropTypes.number),
   addRating: PropTypes.func.isRequired,

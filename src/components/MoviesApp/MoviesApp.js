@@ -17,8 +17,9 @@ export default class MoviesApp extends Component {
     hasRatedMovie: false,
     queryPage: 1,
     ratedPage: 1,
-    isDataLoading: false, // а где ставится в тру?)) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    isDataLoading: false,
     isError: false,
+    moviesGenresArr: [],
     queryMoviesDataArr: [],
     queryTotalMovies: null,
     ratedMoviesDataArr: [],
@@ -31,6 +32,7 @@ export default class MoviesApp extends Component {
 
   componentDidMount() {
     this.createGuestSession();
+    this.getGenresArr();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -62,6 +64,16 @@ export default class MoviesApp extends Component {
       .catch(this.onFetchError);
   };
 
+  getGenresArr = () => {
+    this.TMDBService.getGenresArr()
+      .then((moviesGenresArr) =>
+        this.setState({
+          moviesGenresArr,
+        }),
+      )
+      .catch(this.onFetchError);
+  };
+
   onLabelChange = (e) => {
     this.setState({
       queryText: e.target.value,
@@ -76,11 +88,16 @@ export default class MoviesApp extends Component {
     } else {
       this.setState({
         ratedPage: page,
+        isDataLoading: true,
       });
     }
   };
 
   getMoviesData = debounce(() => {
+    this.setState({
+      isDataLoading: true,
+    });
+
     this.TMDBService.getMoviesDataArr(this.state.queryText, this.state.queryPage)
       .then((data) =>
         this.setState({
@@ -93,13 +110,15 @@ export default class MoviesApp extends Component {
   }, 750);
 
   addRating = (ratingValue, movieId) => {
-    if (!this.state.hasRatedMovie) {
+    const { hasRatedMovie, guestSessionId } = this.state;
+
+    if (!hasRatedMovie) {
       this.setState({
         hasRatedMovie: true,
       });
     }
 
-    this.TMDBService.addRating(movieId, this.state.guestSessionId, ratingValue)
+    this.TMDBService.addRating(movieId, guestSessionId, ratingValue)
       .then((res) => {
         if (res) {
           this.setState(({ moviesIdRateObj }) => {
@@ -117,7 +136,13 @@ export default class MoviesApp extends Component {
   };
 
   getRatedMovies = () => {
-    const { guestSessionId, ratedPage } = this.state;
+    const { ratedPage, activeTab, hasRatedMovie, guestSessionId } = this.state;
+
+    if (activeTab === '2' && hasRatedMovie) {
+      this.setState({
+        isDataLoading: true,
+      });
+    }
 
     this.TMDBService.getRatedMovies(guestSessionId, ratedPage)
       .then((data) =>
@@ -136,6 +161,7 @@ export default class MoviesApp extends Component {
       activeTab,
       isDataLoading,
       isError,
+      moviesGenresArr,
       queryMoviesDataArr,
       queryTotalMovies,
       ratedMoviesDataArr,
@@ -156,6 +182,7 @@ export default class MoviesApp extends Component {
               activeTab={activeTab}
               isDataLoading={isDataLoading}
               isError={isError}
+              moviesGenresArr={moviesGenresArr}
               moviesDataArr={queryMoviesDataArr}
               moviesIdRateObj={moviesIdRateObj}
               addRating={this.addRating}
@@ -177,6 +204,7 @@ export default class MoviesApp extends Component {
               activeTab={activeTab}
               isDataLoading={isDataLoading}
               isError={isError}
+              moviesGenresArr={moviesGenresArr}
               moviesDataArr={ratedMoviesDataArr}
               addRating={this.addRating}
             />

@@ -15,6 +15,40 @@ export default class TMDBService {
     return data;
   }
 
+  async createGuestSession() {
+    const thisEndPointUrl = 'authentication/guest_session/new';
+
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNDdmYjI2OGVmYzNhNTRlODFjYWFkYzk1ZGU0YzEyNCIsInN1YiI6IjY1ZDg3MTg2Y2VkYWM0MDE2MjUzY2ZkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Q0pNWFwFcUuVZ7yAcxMevBRrmp7eMQUFbBNlqK3tsIU',
+      },
+    };
+
+    const data = await this.fetchBase(thisEndPointUrl, fetchOptions);
+
+    return data.guest_session_id;
+  }
+
+  async getGenresArr() {
+    const thisEndPointUrl = 'genre/movie/list?language=en';
+
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNDdmYjI2OGVmYzNhNTRlODFjYWFkYzk1ZGU0YzEyNCIsInN1YiI6IjY1ZDg3MTg2Y2VkYWM0MDE2MjUzY2ZkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Q0pNWFwFcUuVZ7yAcxMevBRrmp7eMQUFbBNlqK3tsIU',
+      },
+    };
+
+    const data = await this.fetchBase(thisEndPointUrl, fetchOptions);
+
+    return data.genres;
+  }
+
   async getMoviesDataArr(queryText, page) {
     const thisBaseUrl = 'search/movie?query=';
     const queryParams = `&include_adult=false&language=en-US&page=${page}`;
@@ -34,23 +68,6 @@ export default class TMDBService {
     const result = { dataArr: data.results, totalMovies: !queryText ? null : data.total_results };
 
     return result;
-  }
-
-  async createGuestSession() {
-    const thisEndPointUrl = 'authentication/guest_session/new';
-
-    const fetchOptions = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNDdmYjI2OGVmYzNhNTRlODFjYWFkYzk1ZGU0YzEyNCIsInN1YiI6IjY1ZDg3MTg2Y2VkYWM0MDE2MjUzY2ZkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Q0pNWFwFcUuVZ7yAcxMevBRrmp7eMQUFbBNlqK3tsIU',
-      },
-    };
-
-    const data = await this.fetchBase(thisEndPointUrl, fetchOptions);
-
-    return data.guest_session_id;
   }
 
   async addRating(movieId, guestSessionId, ratingValue) {
