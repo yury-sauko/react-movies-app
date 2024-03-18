@@ -5,6 +5,7 @@ import { debounce } from 'lodash';
 import TMDBService from '../TMDBService/TMDBService';
 import SearchString from '../SearchString/SearchString';
 import MoviesList from '../MoviesList/MoviesList';
+import { MovieCardProvider } from '../MovieCardContext/MovieCardContext';
 import MoviesPagination from '../MoviesPagination/MoviesPagination';
 import NoResultsMessage from '../NoResultsMessage/NoResultsMessage';
 import OfflineMessage from '../OfflineMessage/OfflineMessage';
@@ -185,7 +186,7 @@ export default class MoviesApp extends Component {
               moviesGenresArr={moviesGenresArr}
               moviesDataArr={queryMoviesDataArr}
               moviesIdRateObj={moviesIdRateObj}
-              addRating={this.addRating}
+              // addRating={this.addRating}
             />
             {queryTotalMovies === 0 && queryText ? (
               <NoResultsMessage activeTab={activeTab} />
@@ -206,7 +207,7 @@ export default class MoviesApp extends Component {
               isError={isError}
               moviesGenresArr={moviesGenresArr}
               moviesDataArr={ratedMoviesDataArr}
-              addRating={this.addRating}
+              // addRating={this.addRating}
             />
             {ratedTotalMovies === 0 ? <NoResultsMessage activeTab={activeTab} /> : null}
             <MoviesPagination totalMovies={pagTotalMovies} onPageChange={this.onPageChange} />
@@ -219,12 +220,14 @@ export default class MoviesApp extends Component {
     return (
       <section className="movies-app">
         <Online>
-          <Tabs
-            items={tabsItems}
-            defaultActiveKey="1"
-            centered
-            onChange={(activeKey) => this.setState({ activeTab: activeKey })}
-          />
+          <MovieCardProvider value={{ addRating: this.addRating }}>
+            <Tabs
+              items={tabsItems}
+              defaultActiveKey="1"
+              centered
+              onChange={(activeKey) => this.setState({ activeTab: activeKey })}
+            />
+          </MovieCardProvider>
         </Online>
         <Offline>
           <OfflineMessage />

@@ -11,7 +11,7 @@ export default function MoviesList({
   moviesGenresArr,
   moviesDataArr,
   moviesIdRateObj,
-  addRating,
+  // addRating,
 }) {
   const moviesDataMapping = moviesDataArr.map((movieData) => (
     <MovieCard
@@ -26,7 +26,7 @@ export default function MoviesList({
       movieOverview={movieData.overview}
       movieRating={movieData.rating}
       moviesIdRateObj={moviesIdRateObj}
-      addRating={addRating}
+      // addRating={addRating}
     />
   ));
 
@@ -53,5 +53,5 @@ MoviesList.propTypes = {
   moviesGenresArr: PropTypes.arrayOf(PropTypes.object).isRequired,
   moviesDataArr: PropTypes.arrayOf(PropTypes.object).isRequired,
   moviesIdRateObj: PropTypes.objectOf(PropTypes.number),
-  addRating: PropTypes.func.isRequired,
+  // addRating: PropTypes.func.isRequired,
 };

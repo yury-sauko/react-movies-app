@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Spin, Rate } from 'antd';
 // import { StarFilled } from '@ant-design/icons';
 import { format } from 'date-fns';
+import { MovieCardConsumer } from '../MovieCardContext/MovieCardContext';
 import './MovieCard.css';
 import noPosterImg from './no-poster-img.jpg';
 
@@ -72,7 +73,7 @@ export default class MovieCard extends Component {
     movieOverview: PropTypes.string,
     movieRating: PropTypes.number,
     moviesIdRateObj: PropTypes.objectOf(PropTypes.number).isRequired,
-    addRating: PropTypes.func.isRequired,
+    // addRating: PropTypes.func.isRequired,
   };
 
   state = {
@@ -84,10 +85,10 @@ export default class MovieCard extends Component {
     this.setState({ isImgLoading: false });
   };
 
-  handleRateValue = (value) => {
-    this.setState({ rateValue: value });
-    this.props.addRating(value, this.props.movieId);
-  };
+  // handleRateValue = (value) => {
+  //   this.setState({ rateValue: value });
+  //   this.props.addRating(value, this.props.movieId);
+  // };
 
   render() {
     const {
@@ -137,38 +138,48 @@ export default class MovieCard extends Component {
     });
 
     return (
-      <li className="movie-card">
-        <div className="movie-poster-container">
-          <img
-            src={imgSrc ? `${_imgSrcBase}${imgSrc}` : noPosterImg}
-            alt="We are sorry, but there was an error when uploading the poster"
-            className="movie-poster"
-            onLoad={this.handleImgLoading}
-            onError={this.handleImgLoading}
-            style={{ display: isImgLoading ? 'none' : 'block' }}
-          />
-          {isImgLoading ? <Spin /> : null}
-        </div>
-        <div className="movie-descr">
-          <h3 className="movie-title">{movieTitle}</h3>
-          <div className="movie-rate-current" style={{ borderColor: `${colorMovieRateCurrent}` }}>
-            {activeTab === '1' ? rateCurTab1 : movieRating}
-          </div>
-          <p className="movie-release-date">{releaseDate}</p>
-          <ul className="movie-genres-list">{genresIconsArr}</ul>
-          <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
-          <Rate
-            className="movie-rate-stars"
-            // character={<StarFilled style={{ width: '17px' }} />}
-            allowHalf
-            allowClear={false}
-            count={10}
-            value={activeTab === '1' ? rateValueTab1 : movieRating}
-            disabled={activeTab === '2'}
-            onChange={(value) => this.handleRateValue(value)}
-          />
-        </div>
-      </li>
+      <MovieCardConsumer>
+        {({ addRating }) => (
+          <li className="movie-card">
+            <div className="movie-poster-container">
+              <img
+                src={imgSrc ? `${_imgSrcBase}${imgSrc}` : noPosterImg}
+                alt="We are sorry, but there was an error when uploading the poster"
+                className="movie-poster"
+                onLoad={this.handleImgLoading}
+                onError={this.handleImgLoading}
+                style={{ display: isImgLoading ? 'none' : 'block' }}
+              />
+              {isImgLoading ? <Spin /> : null}
+            </div>
+            <div className="movie-descr">
+              <h3 className="movie-title">{movieTitle}</h3>
+              <div
+                className="movie-rate-current"
+                style={{ borderColor: `${colorMovieRateCurrent}` }}
+              >
+                {activeTab === '1' ? rateCurTab1 : movieRating}
+              </div>
+              <p className="movie-release-date">{releaseDate}</p>
+              <ul className="movie-genres-list">{genresIconsArr}</ul>
+              <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
+              <Rate
+                className="movie-rate-stars"
+                // character={<StarFilled style={{ width: '17px' }} />}
+                allowHalf
+                allowClear={false}
+                count={10}
+                value={activeTab === '1' ? rateValueTab1 : movieRating}
+                disabled={activeTab === '2'}
+                onChange={(value) => {
+                  this.setState({ rateValue: value });
+                  addRating(value, this.props.movieId);
+                }}
+              />
+            </div>
+          </li>
+        )}
+      </MovieCardConsumer>
     );
   }
 }
