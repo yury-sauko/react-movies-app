@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Spin, Rate } from 'antd';
 // import { StarFilled } from '@ant-design/icons';
@@ -53,7 +53,7 @@ function trimMovieDescr(header, text) {
   return trimmedText;
 }
 
-export default class MovieCard extends Component {
+export default class MovieCard extends PureComponent {
   static defaultProps = {
     imgSrc: '',
     movieTitle: 'Movie title unknown',
