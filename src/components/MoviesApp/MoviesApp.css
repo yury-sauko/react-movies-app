@@ -30,3 +30,15 @@ body {
   min-height: 100vh;
   background-color: #fff;
 }
+
+@media (max-width: 768px) {
+  .float-btn-custom {
+    inset-inline-end: 16px;
+  }
+}
+
+@media (max-width: 575px) {
+  .float-btn-custom {
+    inset-block-end: 24px;
+  }
+}

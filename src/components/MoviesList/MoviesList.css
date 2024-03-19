@@ -6,3 +6,9 @@
   justify-content: center;
   gap: 35px;
 }
+
+@media (max-width: 768px) {
+  .movies-list {
+    gap: 20px;
+  }
+}

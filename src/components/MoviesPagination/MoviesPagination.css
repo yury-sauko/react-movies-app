@@ -2,3 +2,9 @@
   margin-bottom: 15px;
   text-align: center;
 }
+
+@media (max-width: 768px) {
+  .movies-pagination {
+    margin-top: -15px;
+  }
+}

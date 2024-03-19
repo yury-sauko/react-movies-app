@@ -9,6 +9,7 @@ export default function MoviesPagination({ totalMovies, onPageChange }) {
       defaultCurrent={1}
       defaultPageSize={20}
       showSizeChanger={false}
+      size="small"
       total={totalMovies}
       onChange={(page) => onPageChange(page)}
     />

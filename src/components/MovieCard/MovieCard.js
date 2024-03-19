@@ -152,31 +152,26 @@ export default class MovieCard extends PureComponent {
               />
               {isImgLoading ? <Spin /> : null}
             </div>
-            <div className="movie-descr">
-              <h3 className="movie-title">{movieTitle}</h3>
-              <div
-                className="movie-rate-current"
-                style={{ borderColor: `${colorMovieRateCurrent}` }}
-              >
-                {activeTab === '1' ? rateCurTab1 : movieRating}
-              </div>
-              <p className="movie-release-date">{releaseDate}</p>
-              <ul className="movie-genres-list">{genresIconsArr}</ul>
-              <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
-              <Rate
-                className="movie-rate-stars"
-                // character={<StarFilled style={{ width: '17px' }} />}
-                allowHalf
-                allowClear={false}
-                count={10}
-                value={activeTab === '1' ? rateValueTab1 : movieRating}
-                disabled={activeTab === '2'}
-                onChange={(value) => {
-                  this.setState({ rateValue: value });
-                  addRating(value, this.props.movieId);
-                }}
-              />
+            <h3 className="movie-title">{movieTitle}</h3>
+            <div className="movie-rate-current" style={{ borderColor: `${colorMovieRateCurrent}` }}>
+              {activeTab === '1' ? rateCurTab1 : movieRating}
             </div>
+            <p className="movie-release-date">{releaseDate}</p>
+            <ul className="movie-genres-list">{genresIconsArr}</ul>
+            <p className="movie-overview">{trimMovieDescr(movieTitle, movieOverview)}</p>
+            <Rate
+              className="movie-rate-stars"
+              // character={<StarFilled style={{ width: '17px' }} />}
+              allowHalf
+              allowClear={false}
+              count={10}
+              value={activeTab === '1' ? rateValueTab1 : movieRating}
+              disabled={activeTab === '2'}
+              onChange={(value) => {
+                this.setState({ rateValue: value });
+                addRating(value, this.props.movieId);
+              }}
+            />
           </li>
         )}
       </MovieCardConsumer>

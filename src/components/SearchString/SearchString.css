@@ -11,3 +11,16 @@
   line-height: 38px;
   color: #827e7e;
 }
+
+@media (max-width: 768px) {
+  .search-string {
+    margin: 0 auto;
+    width: 388px;
+  }
+}
+
+@media (max-width: 420px) {
+  .search-string {
+    width: 95%;
+  }
+}

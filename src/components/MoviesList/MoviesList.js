@@ -35,7 +35,7 @@ export default function MoviesList({
   return (
     <ul
       className="movies-list"
-      style={{ padding: moviesDataArr.length === 0 ? '0' : '20px 0 35px' }}
+      style={{ padding: moviesDataArr.length === 0 ? '20px 0 0' : '20px 10px 35px' }}
     >
       {isDataLoading ? <Spin size="large" /> : moviesOrError}
     </ul>

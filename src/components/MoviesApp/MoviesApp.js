@@ -192,7 +192,11 @@ export default class MoviesApp extends Component {
               <NoResultsMessage activeTab={activeTab} />
             ) : null}
             <MoviesPagination totalMovies={pagTotalMovies} onPageChange={this.onPageChange} />
-            <FloatButton.BackTop visibilityHeight={400} shape="square" />
+            <FloatButton.BackTop
+              className="float-btn-custom"
+              visibilityHeight={400}
+              shape="square"
+            />
           </>
         ),
       },
@@ -211,7 +215,11 @@ export default class MoviesApp extends Component {
             />
             {ratedTotalMovies === 0 ? <NoResultsMessage activeTab={activeTab} /> : null}
             <MoviesPagination totalMovies={pagTotalMovies} onPageChange={this.onPageChange} />
-            <FloatButton.BackTop visibilityHeight={400} shape="square" />
+            <FloatButton.BackTop
+              className="float-btn-custom"
+              visibilityHeight={400}
+              shape="square"
+            />
           </>
         ),
       },
